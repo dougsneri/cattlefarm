@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -27,21 +28,29 @@ import br.com.igorrodrigues.cattlefarm.models.StatusAnimal;
 @Controller
 @RequestMapping("/flock")
 public class CattleController {
-
+	
 	@Autowired
 	private AnimalDao bovineDao;
-
+	
+	private BigDecimal setAgeAndPeso(List<Bovine> animais) {
+		BigDecimal pesoTotal = new BigDecimal(0);
+		for (Bovine bovine : animais) {
+			bovine.setAge();
+			pesoTotal = pesoTotal.add(bovine.getWeightArrobaFree()).setScale(2, RoundingMode.HALF_EVEN);
+		}
+		return pesoTotal;
+	}
+	
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
 		dataBinder.addValidators(new BovineValidation());
 	}
-
+	
 	@GetMapping("/bovineForm")
 	public ModelAndView bovineForm(Bovine bovine) {
 		ModelAndView modelAndView = new ModelAndView("flock/bovineForm");
 		modelAndView.addObject("type", BovineType.values());
 		modelAndView.addObject("sex", Sex.values());
-		modelAndView.addObject("status", StatusAnimal.values());
 		return modelAndView;
 	}
 
@@ -60,17 +69,30 @@ public class CattleController {
 	@GetMapping("/listaBovinos")
 	public ModelAndView listarBovinos() {
 		ModelAndView modelAndView = new ModelAndView("flock/listaAnimais");
-		BigDecimal pesoTotal = new BigDecimal(0);
 		List<Bovine> animais = bovineDao.listarTodosBovinos();
-		for (Bovine bovine : animais) {
-			bovine.setAge();
-			pesoTotal = pesoTotal.add(bovine.getWeightArrobaFree()).setScale(2, RoundingMode.HALF_EVEN);
-		}
+		BigDecimal pesoTotal = setAgeAndPeso(animais);
 		modelAndView.addObject("pesoTotal", pesoTotal);
 		modelAndView.addObject("animais", animais);
 
 		System.out.println(animais);
 		return modelAndView;
+	}
+
+	@PostMapping("/listaBovinosFiltrada")
+	public ModelAndView buscarBovino(@RequestParam(value = "id", required = false) Integer Id,
+			@RequestParam(value = "sex", required = false) Sex sex,
+			@RequestParam(value = "type", required = false) BovineType type,
+			@RequestParam(value = "nick", required = false) String nick) {
+		
+		ModelAndView modelAndView = new ModelAndView("flock/listaAnimais");
+		List<Bovine> bovinosFiltrados = bovineDao.listarBovinos(Id, sex, type, nick);
+		BigDecimal pesoTotal = setAgeAndPeso(bovinosFiltrados);
+		modelAndView.addObject("animais", bovinosFiltrados);
+		modelAndView.addObject("pesoTotal", pesoTotal);
+		modelAndView.addObject("type", BovineType.values());
+		modelAndView.addObject("sex", Sex.values());
+		return modelAndView;
+		
 	}
 
 }

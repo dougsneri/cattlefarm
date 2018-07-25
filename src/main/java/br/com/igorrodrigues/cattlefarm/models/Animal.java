@@ -30,7 +30,7 @@ public abstract class Animal {
 	protected Period age;
 	protected double weight;
 	protected Sex sex;
-	protected StatusAnimal status;
+	protected StatusAnimal status = StatusAnimal.ACTIVE;
 	
 	public void setId(Integer id) {
 		this.id = id;

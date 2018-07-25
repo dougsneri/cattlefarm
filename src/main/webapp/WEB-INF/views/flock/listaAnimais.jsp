@@ -10,7 +10,24 @@
 	<div class="container">
 		<h2>Lista de Animais</h2>
 		<h5>Filtro</h5>
+		<form action="${s:mvcUrl('CC#buscarBovino').build() }" method="post">
 		
+			<div class="col-sm-3 my-1">
+				<label class="sr-only" for="inlineFormInputName">ID:</label> <input
+					name="id" class="form-control form-control-sm" placeholder="id" />
+			</div>
+			
+			<div class="col-sm-3 my-1">
+				<label class="sr-only" for="inlineFormInputName">Nick:</label> <input
+					name="nick" class="form-control form-control-sm" placeholder="apelido" />
+			</div>
+
+			<div class="col-auto my-1">
+				<button type="submit" class="btn btn-secondary btn-sm">Filtrar</button>
+			</div>
+		</form>
+
+
 		<table class="table table-hover">
 			<thead>
 				<tr>

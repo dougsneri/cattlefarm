@@ -69,17 +69,6 @@
 				</div>
 			</div>
 			
-			<div class="form-group row">
-				<label for="type">Status:</label>
-				<div class="form-check form-check-inline">
-					<c:forEach items="${status}" var="status">
-						<form:radiobutton path="status" cssClass="form-control form-check-input" value="${status}" id="status" />
-						<label for="type" class="form-check-lable">${status}</label>
-					</c:forEach>
-					<form:errors path="type" cssClass="text-danger"/>
-				</div>
-			</div>
-
 			<button type="submit" class="btn btn-primary">Cadastrar</button>
 		</form:form>
 

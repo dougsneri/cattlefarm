@@ -18,6 +18,7 @@ import br.com.igorrodrigues.cattlefarm.models.Animal;
 import br.com.igorrodrigues.cattlefarm.models.Bovine;
 import br.com.igorrodrigues.cattlefarm.models.BovineType;
 import br.com.igorrodrigues.cattlefarm.models.Sex;
+import br.com.igorrodrigues.cattlefarm.models.StatusAnimal;
 
 @Repository
 @Transactional
@@ -43,7 +44,10 @@ public class AnimalDao {
 
 	public List<Bovine> listarTodosBovinos() {
 		System.out.println("Buscando todos Bovinos");
-		return manager.createQuery("select b from Bovine b", Bovine.class).getResultList();
+		String jpql = "select b from Bovine b where b.status = :bovineStatus";
+		TypedQuery<Bovine> query = manager.createQuery(jpql, Bovine.class);
+		query.setParameter("bovineStatus", StatusAnimal.ACTIVE);
+		return query.getResultList();
 	}
 
 	public List<Bovine> listarBovinos(Integer id, Sex sex, BovineType type, String nick) {
@@ -56,9 +60,9 @@ public class AnimalDao {
 		Path<Sex> pathSex = root.get("sex");
 		Path<BovineType> pathType = root.get("type");
 		Path<String> pathNick = root.get("nick");
-
+		
 		Predicate conjunction = criteriaBuilder.conjunction();
-
+		
 		if (id != null) {
 			Predicate IdIgual = criteriaBuilder.equal(pathId, id);
 			conjunction = criteriaBuilder.and(IdIgual);
