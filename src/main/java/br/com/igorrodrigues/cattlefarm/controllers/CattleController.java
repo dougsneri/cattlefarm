@@ -1,17 +1,18 @@
 package br.com.igorrodrigues.cattlefarm.controllers;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +24,6 @@ import br.com.igorrodrigues.cattlefarm.Validation.BovineValidation;
 import br.com.igorrodrigues.cattlefarm.models.Bovine;
 import br.com.igorrodrigues.cattlefarm.models.BovineType;
 import br.com.igorrodrigues.cattlefarm.models.Sex;
-import br.com.igorrodrigues.cattlefarm.models.StatusAnimal;
 
 @Controller
 @RequestMapping("/flock")
@@ -31,15 +31,6 @@ public class CattleController {
 	
 	@Autowired
 	private AnimalDao bovineDao;
-	
-	private BigDecimal setAgeAndPeso(List<Bovine> animais) {
-		BigDecimal pesoTotal = new BigDecimal(0);
-		for (Bovine bovine : animais) {
-			bovine.setAge();
-			pesoTotal = pesoTotal.add(bovine.getWeightArrobaFree()).setScale(2, RoundingMode.HALF_EVEN);
-		}
-		return pesoTotal;
-	}
 	
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -70,23 +61,26 @@ public class CattleController {
 	public ModelAndView listarBovinos() {
 		ModelAndView modelAndView = new ModelAndView("flock/listaAnimais");
 		List<Bovine> animais = bovineDao.listarTodosBovinos();
-		BigDecimal pesoTotal = setAgeAndPeso(animais);
+		BigDecimal pesoTotal = bovineDao.setPesoTotal(animais);
+		bovineDao.setAge(animais);
 		modelAndView.addObject("pesoTotal", pesoTotal);
 		modelAndView.addObject("animais", animais);
+		modelAndView.addObject("type", BovineType.values());
+		modelAndView.addObject("sex", Sex.values());
 
-		System.out.println(animais);
 		return modelAndView;
 	}
 
-	@PostMapping("/listaBovinosFiltrada")
-	public ModelAndView buscarBovino(@RequestParam(value = "id", required = false) Integer Id,
+	@GetMapping("/listaBovinosFiltrada")
+	public ModelAndView buscarBovino(@RequestParam(value = "id", required = false) Integer id,
 			@RequestParam(value = "sex", required = false) Sex sex,
 			@RequestParam(value = "type", required = false) BovineType type,
 			@RequestParam(value = "nick", required = false) String nick) {
 		
 		ModelAndView modelAndView = new ModelAndView("flock/listaAnimais");
-		List<Bovine> bovinosFiltrados = bovineDao.listarBovinos(Id, sex, type, nick);
-		BigDecimal pesoTotal = setAgeAndPeso(bovinosFiltrados);
+		List<Bovine> bovinosFiltrados = bovineDao.listarBovinos(id, sex, type, nick);
+		BigDecimal pesoTotal = bovineDao.setPesoTotal(bovinosFiltrados);
+		bovineDao.setAge(bovinosFiltrados);
 		modelAndView.addObject("animais", bovinosFiltrados);
 		modelAndView.addObject("pesoTotal", pesoTotal);
 		modelAndView.addObject("type", BovineType.values());
@@ -94,5 +88,21 @@ public class CattleController {
 		return modelAndView;
 		
 	}
+	
+	@GetMapping("/{id}/form")
+	public ModelAndView update(@PathVariable Integer id, Model model) {
+		Bovine bovine = bovineDao.find(id);
+		model.addAttribute("bovine", bovine);
+		return bovineForm(bovine);
+	}
+	
+	@GetMapping("/removido")
+	public ModelAndView remove(@RequestParam Integer id, RedirectAttributes redirectAttribute) {
+		bovineDao.remove(id);
+		redirectAttribute.addFlashAttribute("removido", "Animal Removido com sucesso");
+		return new ModelAndView("redirect:/flock/bovineForm");
+	}
+	
+	
 
 }

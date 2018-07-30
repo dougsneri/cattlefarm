@@ -6,7 +6,7 @@ import org.springframework.validation.Validator;
 
 import br.com.igorrodrigues.cattlefarm.models.Bovine;
 
-public class BovineValidation implements Validator{
+public class BovineValidation implements Validator {
 
 	@Override
 	public boolean supports(Class<?> clazz) {
@@ -22,6 +22,7 @@ public class BovineValidation implements Validator{
 		ValidationUtils.rejectIfEmpty(errors, "sex", "field.required");
 		ValidationUtils.rejectIfEmpty(errors, "type", "field.required");
 		ValidationUtils.rejectIfEmpty(errors, "status", "field.required");
+		
 	}
-	
+
 }
