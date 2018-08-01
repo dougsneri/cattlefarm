@@ -3,6 +3,7 @@ package br.com.igorrodrigues.cattlefarm.models;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -94,6 +95,12 @@ public abstract class Animal {
 	
 	public StatusAnimal getStatus() {
 		return status;
+	}
+	
+	public static void setAgeOfList(List<? extends Animal> animais) {
+		for (Animal animal : animais) {
+			animal.setAge();
+		}
 	}
 
 }

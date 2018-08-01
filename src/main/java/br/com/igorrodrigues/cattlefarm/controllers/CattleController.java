@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.igorrodrigues.cattlefarm.DAOs.AnimalDao;
 import br.com.igorrodrigues.cattlefarm.Validation.BovineValidation;
+import br.com.igorrodrigues.cattlefarm.models.Animal;
 import br.com.igorrodrigues.cattlefarm.models.Bovine;
 import br.com.igorrodrigues.cattlefarm.models.BovineType;
 import br.com.igorrodrigues.cattlefarm.models.Sex;
@@ -61,8 +62,8 @@ public class CattleController {
 	public ModelAndView listarBovinos() {
 		ModelAndView modelAndView = new ModelAndView("flock/listaAnimais");
 		List<Bovine> animais = bovineDao.listarTodosBovinos();
-		BigDecimal pesoTotal = bovineDao.setPesoTotal(animais);
-		bovineDao.setAge(animais);
+		BigDecimal pesoTotal = Bovine.setPesoListTotal(animais);
+		Animal.setAgeOfList(animais);
 		modelAndView.addObject("pesoTotal", pesoTotal);
 		modelAndView.addObject("animais", animais);
 		modelAndView.addObject("type", BovineType.values());
@@ -79,8 +80,8 @@ public class CattleController {
 		
 		ModelAndView modelAndView = new ModelAndView("flock/listaAnimais");
 		List<Bovine> bovinosFiltrados = bovineDao.listarBovinos(id, sex, type, nick);
-		BigDecimal pesoTotal = bovineDao.setPesoTotal(bovinosFiltrados);
-		bovineDao.setAge(bovinosFiltrados);
+		BigDecimal pesoTotal = Bovine.setPesoListTotal(bovinosFiltrados);
+		Animal.setAgeOfList(bovinosFiltrados);
 		modelAndView.addObject("animais", bovinosFiltrados);
 		modelAndView.addObject("pesoTotal", pesoTotal);
 		modelAndView.addObject("type", BovineType.values());

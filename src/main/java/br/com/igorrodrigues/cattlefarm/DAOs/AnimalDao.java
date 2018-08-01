@@ -1,7 +1,5 @@
 package br.com.igorrodrigues.cattlefarm.DAOs;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -35,7 +33,7 @@ public class AnimalDao {
 	 * @param animal
 	 */
 	public void save(Animal animal) {
-		if(animal.getId() == null) 
+		if (animal.getId() == null)
 			manager.persist(animal);
 		else
 			manager.merge(animal);
@@ -91,26 +89,11 @@ public class AnimalDao {
 		return typedQuery.getResultList();
 	}
 
-	public BigDecimal setPesoTotal(List<Bovine> animais) {
-		BigDecimal pesoTotal = new BigDecimal(0);
-		for (Bovine bovine : animais) {
-			bovine.setAge();
-			pesoTotal = pesoTotal.add(bovine.getWeightArrobaFree()).setScale(2, RoundingMode.HALF_EVEN);
-		}
-		return pesoTotal;
-	}
-	
-	public void setAge(List<Bovine> animais) {
-		for (Bovine bovine : animais) {
-			bovine.setAge();
-		}
-	}
-
 	public Bovine find(Integer id) {
 		Bovine bovine = manager.find(Bovine.class, id);
 		return bovine;
 	}
-	
+
 	public void remove(Integer id) {
 		Bovine bovine = find(id);
 		manager.remove(bovine);

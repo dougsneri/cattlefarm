@@ -2,6 +2,7 @@ package br.com.igorrodrigues.cattlefarm.models;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 import javax.persistence.Entity;
 
@@ -60,6 +61,15 @@ public class Bovine extends Animal  {
 	@Override
 	public BigDecimal getValue() {
 		return this.value;
+	}
+	
+	public static BigDecimal setPesoListTotal(List<Bovine> animais) {
+		BigDecimal pesoTotal = new BigDecimal(0);
+		for (Bovine bovine : animais) {
+			bovine.setAge();
+			pesoTotal = pesoTotal.add(bovine.getWeightArrobaFree()).setScale(2, RoundingMode.HALF_EVEN);
+		}
+		return pesoTotal;
 	}
 	
 }
