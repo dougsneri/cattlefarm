@@ -14,7 +14,6 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
-import br.com.igorrodrigues.cattlefarm.models.Animal;
 import br.com.igorrodrigues.cattlefarm.models.Bovine;
 import br.com.igorrodrigues.cattlefarm.models.BovineType;
 import br.com.igorrodrigues.cattlefarm.models.Sex;
@@ -28,27 +27,27 @@ public class AnimalDao {
 	private EntityManager manager;
 
 	/**
-	 * Save a animal in DB
-	 * 
-	 * @param animal
+	 * Save or update a Bovine in DB
+	 *
+	 * @param bovine
 	 */
-	public void save(Animal animal) {
-		if (animal.getId() == null)
-			manager.persist(animal);
+	public void saveBovine(Bovine bovine) {
+		if (bovine.getId() == null)
+			manager.persist(bovine);
 		else
-			manager.merge(animal);
+			manager.merge(bovine);
 	}
 
 	/**
 	 * List all Bovines in DB
-	 * 
+	 *
 	 * @return
 	 */
 
 	public List<Bovine> listarTodosBovinos() {
-		String jpql = "select b from Bovine b where b.status = :bovineStatus";
+		String jpql = "select b from Bovine b where b.status = :pBovineStatus";
 		TypedQuery<Bovine> query = manager.createQuery(jpql, Bovine.class);
-		query.setParameter("bovineStatus", StatusAnimal.ACTIVE);
+		query.setParameter("pBovineStatus", StatusAnimal.ACTIVE);
 		return query.getResultList();
 	}
 

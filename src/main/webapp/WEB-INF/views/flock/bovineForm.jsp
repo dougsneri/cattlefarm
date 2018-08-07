@@ -11,8 +11,8 @@
 		<h2>Formulário de Cadastro: Bovino</h2>
 		<p>${sucesso}</p>
 		<p>${removido}</p>
-		<form:form action="${s:mvcUrl('CC#saveBovine').build()}"
-			method="post" modelAttribute="bovine">
+		<form:form action="${s:mvcUrl('CC#saveBovine').build()}" method="post"
+			modelAttribute="bovine">
 			<div class="form-group row">
 				<label for="id">Id:</label>
 				<div class="col-sm-10">
@@ -25,7 +25,6 @@
 				<label for="id">Apelido:</label>
 				<div class="col-sm-10">
 					<form:input path="nick" cssClass="form-control" id="nick" />
-					<form:errors path="nick" cssClass="text-danger" />
 				</div>
 			</div>
 
@@ -48,39 +47,58 @@
 				</div>
 			</div>
 
-				<label for="sex">Sexo:</label>
-				<c:forEach items="${sex}" var="sexo">
-					
-					<div class="custom-control custom-radio">
-						<form:radiobutton path="sex" cssClass="custom-control-input"
-							value="${sexo}" id="${sexo}" />
-						<label for="${sexo}" class="custom-control-label">${sexo}</label>
-					</div>
-					
-				</c:forEach>
-				<form:errors path="sex" cssClass="text-danger" />
+			<label for="sex">Sexo:</label>
+			<c:forEach items="${sex}" var="sexo">
 
-				<label for="type">Tipo:</label>
-				<c:forEach items="${type}" var="tipo">
+				<div class="custom-control custom-radio">
+					<form:radiobutton path="sex" cssClass="custom-control-input"
+						value="${sexo}" id="${sexo}" />
+					<label for="${sexo}" class="custom-control-label">${sexo}</label>
+				</div>
 
-					<div class="custom-control custom-radio">
-						<form:radiobutton path="type"
-							cssClass="custom-control-input" value="${tipo}"
-							id="${tipo}" />
-						<label for="${tipo}" class="custom-control-label">${tipo}</label>
-					</div>
+			</c:forEach>
+			<form:errors path="sex" cssClass="text-danger" />
 
-				</c:forEach>
-				<form:errors path="type" cssClass="text-danger" />
+			<label for="type">Tipo:</label>
+			<c:forEach items="${type}" var="tipo">
+
+				<div class="custom-control custom-radio">
+					<form:radiobutton path="type" cssClass="custom-control-input"
+						value="${tipo}" id="${tipo}" />
+					<label for="${tipo}" class="custom-control-label">${tipo}</label>
+				</div>
+
+			</c:forEach>
+			<form:errors path="type" cssClass="text-danger" />
 			<c:if test="${bovine.id == null }">
-			<button type="submit" class="btn btn-primary">Cadastrar</button>
+				<button type="submit" class="btn btn-primary">Cadastrar</button>
 			</c:if>
-			
+
 			<c:if test="${bovine.id != null }">
-			<button type="submit" class="btn btn-primary">Atualizar</button>
-			<a href="${s:mvcUrl('CC#remove').arg(0,bovine.id).build()}"><button type="button" class="btn btn-danger">Remover</button></a>
+				<button type="submit" class="btn btn-primary">Atualizar</button>
+				<a href="${s:mvcUrl('CC#remove').arg(0,bovine.id).build()}"><button
+						type="button" class="btn btn-danger">Remover</button></a>
 			</c:if>
 		</form:form>
+
+		<c:if test="${bovine.id != null }">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th scope="col">Data Pesagem</th>
+						<th scope="col">Peso</th>
+					</tr>
+				</thead>
+				<c:forEach var="dataPeso" items="${bovine.pesoEDataList}">
+					<tbody>
+						<tr>
+							<td>${dataPeso.data}</td>
+							<td>${dataPeso.peso}</td>
+						</tr>
+					</tbody>
+				</c:forEach>
+			</table>
+		</c:if>
 
 	</div>
 </tags:pageTemplate>

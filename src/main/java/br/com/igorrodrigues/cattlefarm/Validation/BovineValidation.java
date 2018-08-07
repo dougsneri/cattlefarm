@@ -16,13 +16,12 @@ public class BovineValidation implements Validator {
 	@Override
 	public void validate(Object target, Errors errors) {
 		ValidationUtils.rejectIfEmpty(errors, "id", "field.required");
-		ValidationUtils.rejectIfEmpty(errors, "nick", "field.required");
 		ValidationUtils.rejectIfEmpty(errors, "birth", "field.required");
 		ValidationUtils.rejectIfEmpty(errors, "weight", "field.required");
 		ValidationUtils.rejectIfEmpty(errors, "sex", "field.required");
 		ValidationUtils.rejectIfEmpty(errors, "type", "field.required");
 		ValidationUtils.rejectIfEmpty(errors, "status", "field.required");
-		
+
 	}
 
 }
