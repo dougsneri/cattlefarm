@@ -8,9 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.DynamicUpdate;
+
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
  * This class represents one bovine of the flock
@@ -21,8 +24,9 @@ import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @DynamicUpdate
-@XmlRootElement
-public class Bovine extends Animal {
+@JsonRootName(value = "bovine")
+@JacksonXmlRootElement(localName="bovine")
+public class Bovine extends Animal{
 
 	@Enumerated(EnumType.STRING)
 	private BovineType type;
@@ -31,8 +35,9 @@ public class Bovine extends Animal {
 	public BigDecimal getWeightArroba() {
 		return new BigDecimal(this.weight / 15).setScale(2, RoundingMode.HALF_EVEN);
 	}
-
+	
 	@OneToMany(mappedBy = "bovine")
+	@JacksonXmlElementWrapper(localName="ListaPesosEDatas")
 	private List<PesoEData> pesoEDataList;
 
 	/**
@@ -84,7 +89,6 @@ public class Bovine extends Animal {
 	public static BigDecimal setValueListTotal(List<Bovine> animais) {
 		BigDecimal valueTotal = new BigDecimal(0);
 		for (Bovine bovine : animais) {
-			bovine.setAge();
 			valueTotal = valueTotal.add(bovine.getValue()).setScale(2, RoundingMode.HALF_EVEN);
 		}
 		return valueTotal;

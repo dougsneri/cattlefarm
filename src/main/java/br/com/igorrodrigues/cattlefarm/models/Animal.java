@@ -11,9 +11,17 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
+import br.com.igorrodrigues.cattlefarm.config.LocalDateAdapter;
+import br.com.igorrodrigues.cattlefarm.config.PeriodAdapter;
 
 /**
  * This Class represent a animal of the farm
@@ -24,7 +32,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@XmlRootElement
+@JacksonXmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Animal {
 
 	@Id
@@ -32,7 +42,9 @@ public abstract class Animal {
 	protected String nick;
 	protected BigDecimal value;
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@XmlJavaTypeAdapter(value = LocalDateAdapter.class)
 	protected LocalDate birth;
+	@XmlJavaTypeAdapter(value = PeriodAdapter.class)
 	protected Period age;
 	protected double weight;
 	@Enumerated(EnumType.STRING)
@@ -70,7 +82,6 @@ public abstract class Animal {
 
 	public void setAge() {
 		this.age = Period.between(birth, LocalDate.now());
-		;
 	}
 
 	public LocalDate getBirth() {

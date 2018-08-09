@@ -153,6 +153,18 @@
 			<artifactId>jackson-dataformat-xml</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.9.6</version><!--$NO-MVN-MAN-VER$-->
+		</dependency>
+
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>3.1.0</version><!--$NO-MVN-MAN-VER$ -->
+			<scope>test</scope>
+		</dependency>
 
 	</dependencies>
 
@@ -164,6 +176,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
 
 </project>

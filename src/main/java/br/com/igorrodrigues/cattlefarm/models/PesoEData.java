@@ -7,8 +7,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.hibernate.annotations.DynamicUpdate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import br.com.igorrodrigues.cattlefarm.config.LocalDateAdapter;
 
 @Entity
 @DynamicUpdate
@@ -17,10 +22,10 @@ public class PesoEData {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-
+	@XmlJavaTypeAdapter(value = LocalDateAdapter.class)
 	private LocalDate data;
 	private Double peso;
-
+	@JsonIgnore
 	@ManyToOne
 	private Bovine bovine;
 

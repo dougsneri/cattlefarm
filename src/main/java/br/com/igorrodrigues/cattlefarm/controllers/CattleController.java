@@ -89,14 +89,15 @@ public class CattleController {
 
 		ModelAndView modelAndView = new ModelAndView("flock/listaAnimais");
 		List<Bovine> bovinosFiltrados = bovineDao.listarBovinos(id, sex, type, nick);
+		Animal.setAgeOfList(bovinosFiltrados);
 		BigDecimal pesoTotal = Bovine.setPesoListTotal(bovinosFiltrados);
-		BigDecimal valueListTotal = BigDecimal.ZERO;
+		BigDecimal valueListTotal = new BigDecimal(0);
 		
 		if (value != null) {
 			for (Bovine bovine : bovinosFiltrados) {
 				bovine.setValue(value);
-				valueListTotal = Bovine.setValueListTotal(bovinosFiltrados);
 			}
+			valueListTotal = Bovine.setValueListTotal(bovinosFiltrados);
 		}
 		
 		Animal.setAgeOfList(bovinosFiltrados);
@@ -116,7 +117,7 @@ public class CattleController {
 		return bovineForm(bovine);
 	}
 
-	@GetMapping("/removido")
+	@GetMapping()
 	public ModelAndView remove(@RequestParam Integer id, RedirectAttributes redirectAttribute) {
 		bovineDao.remove(id);
 		redirectAttribute.addFlashAttribute("removido", "Animal Removido com sucesso");

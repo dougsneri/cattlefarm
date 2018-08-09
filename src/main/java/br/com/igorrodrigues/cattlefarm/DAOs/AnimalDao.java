@@ -79,7 +79,7 @@ public class AnimalDao {
 			conjunction = criteriaBuilder.and(criteriaBuilder.equal(pathType, type));
 		}
 
-		if (!nick.isEmpty()) {
+		if (nick != null && !nick.isEmpty()) {
 			conjunction = criteriaBuilder.and(criteriaBuilder.like(pathNick, "%" + nick + "%"));
 		}
 
