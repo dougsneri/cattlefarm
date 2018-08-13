@@ -37,7 +37,7 @@ public class AnimalDao {
 		else
 			manager.merge(bovine);
 	}
-
+	
 	/**
 	 * List all Bovines in DB
 	 *

@@ -1,5 +1,6 @@
 package br.com.igorrodrigues.cattlefarm.models;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
@@ -13,12 +14,12 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import br.com.igorrodrigues.cattlefarm.config.LocalDateAdapter;
 import br.com.igorrodrigues.cattlefarm.config.PeriodAdapter;
@@ -32,11 +33,13 @@ import br.com.igorrodrigues.cattlefarm.config.PeriodAdapter;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@JacksonXmlRootElement
+@XmlTransient
 @XmlAccessorType(XmlAccessType.FIELD)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class Animal {
+public abstract class Animal implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	protected Integer id;
 	protected String nick;
@@ -50,7 +53,11 @@ public abstract class Animal {
 	@Enumerated(EnumType.STRING)
 	protected Sex sex;
 	@Enumerated(EnumType.STRING)
-	protected StatusAnimal status = StatusAnimal.ACTIVE;
+	protected StatusAnimal status;
+	
+	public Animal() {
+		status = StatusAnimal.ACTIVE;
+	}
 
 	public void setId(Integer id) {
 		this.id = id;

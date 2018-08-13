@@ -8,9 +8,13 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
@@ -24,10 +28,14 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 @Entity
 @DynamicUpdate
+@JacksonXmlRootElement(namespace = "bovine")
 @JsonRootName(value = "bovine")
-@JacksonXmlRootElement(localName="bovine")
-public class Bovine extends Animal{
+@JsonPropertyOrder({ "id", "nick", "value", "birth", "age", "weight", "sex", "status", "type", "weightArrobaFree",
+		"pesoEDataList", "weightArroba" })
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Bovine extends Animal {
 
+//	private static final long serialVersionUID = 1L;
 	@Enumerated(EnumType.STRING)
 	private BovineType type;
 	private BigDecimal weightArrobaFree;
@@ -35,9 +43,10 @@ public class Bovine extends Animal{
 	public BigDecimal getWeightArroba() {
 		return new BigDecimal(this.weight / 15).setScale(2, RoundingMode.HALF_EVEN);
 	}
-	
+
 	@OneToMany(mappedBy = "bovine")
-	@JacksonXmlElementWrapper(localName="ListaPesosEDatas")
+	@JacksonXmlElementWrapper(localName = "ListaPesosEDatas")
+	@JsonIgnore
 	private List<PesoEData> pesoEDataList;
 
 	/**
@@ -85,7 +94,7 @@ public class Bovine extends Animal{
 		}
 		return pesoTotal;
 	}
-	
+
 	public static BigDecimal setValueListTotal(List<Bovine> animais) {
 		BigDecimal valueTotal = new BigDecimal(0);
 		for (Bovine bovine : animais) {
