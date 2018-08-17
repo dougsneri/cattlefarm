@@ -10,7 +10,7 @@
 	<div class="container">
 		<h2>Lista de Animais</h2>
 		<h5>Filtro</h5>
-		<form action="${s:mvcUrl('CC#buscarBovino').build()}" method="get">
+		<form action="${s:mvcUrl('CC#searchBovine').build()}" method="get">
 
 			<div class="col-sm-3 my-1">
 				<label class="sr-only" for="inlineFormInputName">ID:</label> <input

@@ -149,9 +149,9 @@ public class TesteRestAssured {
 
 		given().port(port).header("accept", "application/json").contentType("application/json").body(bovine).when()
 				.post("/cattlefarm/api/listaBovinos/" + id);
-		
-		expect().statusCode(200).when().delete("/cattlefarm/api/listaBovinos/" + id);
-		
+
+//		expect().statusCode(200).when().delete("/cattlefarm/api/listaBovinos/" + id);
+
 		int statusCode = given().port(port).when().delete("/cattlefarm/api/listaBovinos/" + id).andReturn()
 				.statusCode();
 

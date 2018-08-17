@@ -17,35 +17,35 @@ import br.com.igorrodrigues.cattlefarm.config.LocalDateAdapter;
 
 @Entity
 @DynamicUpdate
-public class PesoEData {
+public class WeightAndDate {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	@XmlJavaTypeAdapter(value = LocalDateAdapter.class)
-	private LocalDate data;
-	private Double peso;
+	private LocalDate date;
+	private Double weight;
 	@JsonIgnore
 	@ManyToOne
 	private Bovine bovine;
 
 	@Deprecated
-	public PesoEData() {
+	public WeightAndDate() {
 
 	}
 
-	public PesoEData(LocalDate data, Double peso, Bovine bovine) {
-		this.data = data;
-		this.peso = peso;
+	public WeightAndDate(LocalDate date, Double weight, Bovine bovine) {
+		this.date = date;
+		this.weight = weight;
 		this.bovine = bovine;
 	}
 
-	public LocalDate getData() {
-		return data;
+	public LocalDate getDate() {
+		return date;
 	}
 
-	public Double getPeso() {
-		return peso;
+	public Double getWeight() {
+		return weight;
 	}
 
 	public void setBovine(Bovine bovine) {

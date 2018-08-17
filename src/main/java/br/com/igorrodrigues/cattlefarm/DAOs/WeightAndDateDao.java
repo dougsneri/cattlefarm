@@ -6,19 +6,23 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
-import br.com.igorrodrigues.cattlefarm.models.PesoEData;
+import br.com.igorrodrigues.cattlefarm.models.WeightAndDate;
 
 @Transactional
 @Repository
-public class PesoEDataDao {
+public class WeightAndDateDao {
 
 	@PersistenceContext
 	private EntityManager manager;
-
-	public void save(PesoEData pesoEData) {
-		if (pesoEData.getId() == null)
-			manager.persist(pesoEData);
+	
+	/**
+	 * Save a Weight and Date on DB
+	 * @param weightAndDate
+	 */
+	public void save(WeightAndDate weightAndDate) {
+		if (weightAndDate.getId() == null)
+			manager.persist(weightAndDate);
 		else
-			manager.merge(pesoEData);
+			manager.merge(weightAndDate);
 	}
 }

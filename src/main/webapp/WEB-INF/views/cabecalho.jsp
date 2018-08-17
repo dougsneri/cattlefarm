@@ -43,7 +43,7 @@
 				role="button" aria-haspopup="true" aria-expanded="false">Rebanho</a>
 				<div class="dropdown-menu">
 					<a class="dropdown-item" href="${s:mvcUrl('CC#bovineForm').build()}">Cadastrar Bovino</a> <a
-						class="dropdown-item" href="${s:mvcUrl('CC#listarBovinos').build()}">Listar Bovinos</a> <a
+						class="dropdown-item" href="${s:mvcUrl('CC#listBovines').build()}">Listar Bovinos</a> <a
 						class="dropdown-item" href="#">Something else here</a>
 					<div class="dropdown-divider"></div>
 					<a class="dropdown-item" href="#">Separated link</a>

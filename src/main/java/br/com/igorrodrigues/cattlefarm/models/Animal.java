@@ -122,9 +122,13 @@ public abstract class Animal implements Serializable {
 	public StatusAnimal getStatus() {
 		return status;
 	}
-
-	public static void setAgeOfList(List<? extends Animal> animais) {
-		for (Animal animal : animais) {
+	
+	/**
+	 * Set age for a list of animals
+	 * @param animals
+	 */
+	public static void setAgeOfList(List<? extends Animal> animals) {
+		for (Animal animal : animals) {
 			animal.setAge();
 		}
 	}

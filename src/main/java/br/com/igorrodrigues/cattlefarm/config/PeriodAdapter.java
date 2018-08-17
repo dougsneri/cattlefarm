@@ -4,6 +4,7 @@ import java.time.Period;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
+// parser adapter to xml
 public class PeriodAdapter 
 extends XmlAdapter<String, Period> {
 

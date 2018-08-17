@@ -35,9 +35,11 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Bovine extends Animal {
 
-//	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
+
 	@Enumerated(EnumType.STRING)
 	private BovineType type;
+
 	private BigDecimal weightArrobaFree;
 
 	public BigDecimal getWeightArroba() {
@@ -47,17 +49,15 @@ public class Bovine extends Animal {
 	@OneToMany(mappedBy = "bovine")
 	@JacksonXmlElementWrapper(localName = "ListaPesosEDatas")
 	@JsonIgnore
-	private List<PesoEData> pesoEDataList;
-
-	/**
-	 * Return free carcass weight; Consider 50% of weight;
-	 * 
-	 * @return
-	 */
+	private List<WeightAndDate> pesoEDataList;
 
 	public BigDecimal getWeightArrobaFree() {
 		return this.weightArrobaFree;
 	}
+
+	/**
+	 * Calculates the carcass free weight, carcass: Considered 50% of weight;
+	 */
 
 	public void setWeightArrobaFree() {
 		this.weightArrobaFree = getWeightArroba().divide(new BigDecimal(2)).setScale(2, RoundingMode.HALF_EVEN);
@@ -72,7 +72,7 @@ public class Bovine extends Animal {
 	}
 
 	/**
-	 * return the value based in the arroba value;
+	 * Calculates the value based in the arroba value;
 	 */
 
 	@Override
@@ -86,14 +86,25 @@ public class Bovine extends Animal {
 		return this.value;
 	}
 
-	public static BigDecimal setPesoListTotal(List<Bovine> animais) {
+	/**
+	 * return total weight from a list of bovines
+	 * 
+	 * @param animals
+	 * @return
+	 */
+	public static BigDecimal setWeightListTotal(List<Bovine> animals) {
 		BigDecimal pesoTotal = new BigDecimal(0);
-		for (Bovine bovine : animais) {
-			bovine.setAge();
+		for (Bovine bovine : animals) {
 			pesoTotal = pesoTotal.add(bovine.getWeightArrobaFree()).setScale(2, RoundingMode.HALF_EVEN);
 		}
 		return pesoTotal;
 	}
+	
+	/**
+	 * return total value from a list of bovines
+	 * @param animais
+	 * @return
+	 */
 
 	public static BigDecimal setValueListTotal(List<Bovine> animais) {
 		BigDecimal valueTotal = new BigDecimal(0);
@@ -103,12 +114,7 @@ public class Bovine extends Animal {
 		return valueTotal;
 	}
 
-	@Override
-	public void setWeight(double weight) {
-		super.setWeight(weight);
-	}
-
-	public List<PesoEData> getPesoEDataList() {
+	public List<WeightAndDate> getPesoEDataList() {
 		return pesoEDataList;
 	}
 }

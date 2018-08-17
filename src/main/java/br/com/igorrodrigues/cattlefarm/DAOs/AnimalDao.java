@@ -44,12 +44,21 @@ public class AnimalDao {
 	 * @return
 	 */
 
-	public List<Bovine> listarTodosBovinos() {
+	public List<Bovine> listAllBovines() {
 		String jpql = "select b from Bovine b where b.status = :pBovineStatus";
 		TypedQuery<Bovine> query = manager.createQuery(jpql, Bovine.class);
 		query.setParameter("pBovineStatus", StatusAnimal.ACTIVE);
 		return query.getResultList();
 	}
+	
+	/**
+	 * List filtered Bovines
+	 * @param id
+	 * @param sex
+	 * @param type
+	 * @param nick
+	 * @return
+	 */
 
 	public List<Bovine> listarBovinos(Integer id, Sex sex, BovineType type, String nick) {
 

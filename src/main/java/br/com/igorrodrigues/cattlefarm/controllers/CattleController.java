@@ -21,12 +21,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.igorrodrigues.cattlefarm.DAOs.AnimalDao;
-import br.com.igorrodrigues.cattlefarm.DAOs.PesoEDataDao;
+import br.com.igorrodrigues.cattlefarm.DAOs.WeightAndDateDao;
 import br.com.igorrodrigues.cattlefarm.Validation.BovineValidation;
 import br.com.igorrodrigues.cattlefarm.models.Animal;
 import br.com.igorrodrigues.cattlefarm.models.Bovine;
 import br.com.igorrodrigues.cattlefarm.models.BovineType;
-import br.com.igorrodrigues.cattlefarm.models.PesoEData;
+import br.com.igorrodrigues.cattlefarm.models.WeightAndDate;
 import br.com.igorrodrigues.cattlefarm.models.Sex;
 
 @Controller
@@ -37,7 +37,7 @@ public class CattleController {
 	private AnimalDao bovineDao;
 
 	@Autowired
-	private PesoEDataDao pesoEDataDao;
+	private WeightAndDateDao weightAndDateDao;
 
 	@InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
@@ -59,21 +59,21 @@ public class CattleController {
 			return bovineForm(bovine);
 		}
 		bovine.setWeightArrobaFree();
-		PesoEData pesoEData = new PesoEData(LocalDate.now(), bovine.getWeight(), bovine);
+		WeightAndDate weightAndDate = new WeightAndDate(LocalDate.now(), bovine.getWeight(), bovine);
 		bovineDao.saveBovine(bovine);
-		pesoEDataDao.save(pesoEData);
+		weightAndDateDao.save(weightAndDate);
 		redirectAttribute.addFlashAttribute("sucesso", "Animal Cadastrado com sucesso");
 		return new ModelAndView("redirect:/flock/bovineForm");
 	}
 
 	@GetMapping("/listaBovinos")
-	public ModelAndView listarBovinos() {
+	public ModelAndView listBovines() {
 		ModelAndView modelAndView = new ModelAndView("flock/listaAnimais");
-		List<Bovine> animais = bovineDao.listarTodosBovinos();
-		BigDecimal pesoTotal = Bovine.setPesoListTotal(animais);
-		Animal.setAgeOfList(animais);
-		modelAndView.addObject("pesoTotal", pesoTotal);
-		modelAndView.addObject("animais", animais);
+		List<Bovine> bovines = bovineDao.listAllBovines();
+		BigDecimal totalWeight = Bovine.setWeightListTotal(bovines);
+		Animal.setAgeOfList(bovines);
+		modelAndView.addObject("pesoTotal", totalWeight);
+		modelAndView.addObject("animais", bovines);
 		modelAndView.addObject("type", BovineType.values());
 		modelAndView.addObject("sex", Sex.values());
 
@@ -81,28 +81,28 @@ public class CattleController {
 	}
 
 	@GetMapping("/listaBovinosFiltrada")
-	public ModelAndView buscarBovino(@RequestParam(value = "id", required = false) Integer id,
+	public ModelAndView searchBovine(@RequestParam(value = "id", required = false) Integer id,
 			@RequestParam(value = "sex", required = false) Sex sex,
 			@RequestParam(value = "type", required = false) BovineType type,
 			@RequestParam(value = "nick", required = false) String nick,
 			@RequestParam(value = "arrobaValue", required = false) BigDecimal value) {
 
 		ModelAndView modelAndView = new ModelAndView("flock/listaAnimais");
-		List<Bovine> bovinosFiltrados = bovineDao.listarBovinos(id, sex, type, nick);
-		Animal.setAgeOfList(bovinosFiltrados);
-		BigDecimal pesoTotal = Bovine.setPesoListTotal(bovinosFiltrados);
+		List<Bovine> filteredBovines = bovineDao.listarBovinos(id, sex, type, nick);
+		Animal.setAgeOfList(filteredBovines);
+		BigDecimal totalWeight = Bovine.setWeightListTotal(filteredBovines);
 		BigDecimal valueListTotal = new BigDecimal(0);
 		
 		if (value != null) {
-			for (Bovine bovine : bovinosFiltrados) {
+			for (Bovine bovine : filteredBovines) {
 				bovine.setValue(value);
 			}
-			valueListTotal = Bovine.setValueListTotal(bovinosFiltrados);
+			valueListTotal = Bovine.setValueListTotal(filteredBovines);
 		}
 		
-		Animal.setAgeOfList(bovinosFiltrados);
-		modelAndView.addObject("animais", bovinosFiltrados);
-		modelAndView.addObject("pesoTotal", pesoTotal);
+		Animal.setAgeOfList(filteredBovines);
+		modelAndView.addObject("animais", filteredBovines);
+		modelAndView.addObject("pesoTotal", totalWeight);
 		modelAndView.addObject("valueTotal", valueListTotal);
 		modelAndView.addObject("type", BovineType.values());
 		modelAndView.addObject("sex", Sex.values());
