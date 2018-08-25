@@ -117,11 +117,20 @@ public class CattleController {
 		return bovineForm(bovine);
 	}
 
-	@GetMapping()
-	public ModelAndView remove(@RequestParam Integer id, RedirectAttributes redirectAttribute) {
+	@GetMapping("/BovinoRemovido")
+	public ModelAndView removeBovine(@RequestParam Integer id, RedirectAttributes redirectAttribute) {
 		bovineDao.remove(id);
 		redirectAttribute.addFlashAttribute("removido", "Animal Removido com sucesso");
-		return new ModelAndView("redirect:/flock/bovineForm");
+		return new ModelAndView("redirect:/flock/listaBovinos");
+	}
+	
+	@GetMapping("/PesoEDataRemovido")
+	public ModelAndView removeWeightAndDate(@RequestParam Integer id, RedirectAttributes redirectAttribute) {
+		WeightAndDate weightAndDate = weightAndDateDao.find(id);
+		Integer bovineId = weightAndDate.getBovine().getId();
+		weightAndDateDao.remove(id);
+		redirectAttribute.addFlashAttribute("removido", "Data removida com sucesso");
+		return new ModelAndView("redirect:/flock/" + bovineId + "/form");
 	}
 	
 }

@@ -32,7 +32,7 @@ public class AnimalDao {
 	 * @param bovine
 	 */
 	public void saveBovine(Bovine bovine) {
-		if (bovine.getId() == null)
+		if (this.find(bovine.getId()) == null)
 			manager.persist(bovine);
 		else
 			manager.merge(bovine);

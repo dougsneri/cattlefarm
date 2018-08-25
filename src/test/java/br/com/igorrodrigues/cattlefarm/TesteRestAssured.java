@@ -1,6 +1,5 @@
 package br.com.igorrodrigues.cattlefarm;
 
-import static io.restassured.RestAssured.expect;
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 

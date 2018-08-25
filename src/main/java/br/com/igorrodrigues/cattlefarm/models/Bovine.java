@@ -31,7 +31,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 @JacksonXmlRootElement(namespace = "bovine")
 @JsonRootName(value = "bovine")
 @JsonPropertyOrder({ "id", "nick", "value", "birth", "age", "weight", "sex", "status", "type", "weightArrobaFree",
-		"pesoEDataList", "weightArroba" })
+		"pesoEDataList", "weightArroba", "countChild" })
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Bovine extends Animal {
 
@@ -39,19 +39,29 @@ public class Bovine extends Animal {
 
 	@Enumerated(EnumType.STRING)
 	private BovineType type;
-
 	private BigDecimal weightArrobaFree;
-
-	public BigDecimal getWeightArroba() {
-		return new BigDecimal(this.weight / 15).setScale(2, RoundingMode.HALF_EVEN);
-	}
-
+	private int countChild;
 	@OneToMany(mappedBy = "bovine")
 	@JacksonXmlElementWrapper(localName = "ListaPesosEDatas")
 	@JsonIgnore
 	private List<WeightAndDate> pesoEDataList;
 
+	/**
+	 * Return weigth in Arroba
+	 * 
+	 * @return
+	 */
+	public BigDecimal getWeightArroba() {
+		// vaca desconta 30kg
+		if (this.type == BovineType.VACA) {
+			return new BigDecimal((this.weight - 30) / 15).setScale(2, RoundingMode.HALF_EVEN);
+		} else {
+			return new BigDecimal(this.weight / 15).setScale(2, RoundingMode.HALF_EVEN);
+		}
+	}
+
 	public BigDecimal getWeightArrobaFree() {
+		this.setWeightArrobaFree();
 		return this.weightArrobaFree;
 	}
 
@@ -81,11 +91,6 @@ public class Bovine extends Animal {
 		this.value = getWeightArrobaFree().multiply(valuePerArroba);
 	}
 
-	@Override
-	public BigDecimal getValue() {
-		return this.value;
-	}
-
 	/**
 	 * return total weight from a list of bovines
 	 * 
@@ -99,9 +104,10 @@ public class Bovine extends Animal {
 		}
 		return pesoTotal;
 	}
-	
+
 	/**
 	 * return total value from a list of bovines
+	 * 
 	 * @param animais
 	 * @return
 	 */
@@ -116,5 +122,13 @@ public class Bovine extends Animal {
 
 	public List<WeightAndDate> getPesoEDataList() {
 		return pesoEDataList;
+	}
+
+	public void setCountChild(int countChild) {
+			this.countChild = countChild;
+	}
+	
+	public int getCountChild() {
+		return countChild;
 	}
 }

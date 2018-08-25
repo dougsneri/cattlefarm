@@ -10,7 +10,6 @@
 	<div class="container">
 		<h2>Formulário de Cadastro: Bovino</h2>
 		<p>${sucesso}</p>
-		<p>${removido}</p>
 		<form:form action="${s:mvcUrl('CC#saveBovine').build()}" method="post"
 			modelAttribute="bovine">
 			<div class="form-group row">
@@ -70,13 +69,25 @@
 
 			</c:forEach>
 			<form:errors path="type" cssClass="text-danger" />
+			<c:choose>
+				<c:when test="${bovine.type == 'VACA'}">
+					<label for="countChild">Número de Crias:</label>
+					<form:input path="CountChild" cssClass="form-control"
+						placeholder="crias" id="CountChild" />
+				</c:when>
+				<c:when test="${bovine.type == null}">
+					<label for="CountChild">Número de Crias:</label>
+					<form:input path="countChild" cssClass="form-control"
+						placeholder="crias" id="CountChild" />
+				</c:when>
+			</c:choose>
 			<c:if test="${bovine.id == null }">
 				<button type="submit" class="btn btn-primary">Cadastrar</button>
 			</c:if>
 
 			<c:if test="${bovine.id != null }">
 				<button type="submit" class="btn btn-primary">Atualizar</button>
-				<a href="${s:mvcUrl('CC#remove').arg(0,bovine.id).build()}"><button
+				<a href="${s:mvcUrl('CC#removeBovine').arg(0,bovine.id).build()}"><button
 						type="button" class="btn btn-danger">Remover</button></a>
 			</c:if>
 		</form:form>
@@ -87,13 +98,16 @@
 					<tr>
 						<th scope="col">Data Pesagem</th>
 						<th scope="col">Peso</th>
+						<th scope="col">Peso em @</th>
 					</tr>
 				</thead>
 				<c:forEach var="dataPeso" items="${bovine.pesoEDataList}">
 					<tbody>
 						<tr>
-							<td>${dataPeso.data}</td>
-							<td>${dataPeso.peso}</td>
+							<td>${dataPeso.date}</td>
+							<td>${dataPeso.weight}</td>
+							<td>${dataPeso.weightArrobaFree}</td>
+							<td><a href="${s:mvcUrl('CC#removeWeightAndDate').arg(0,dataPeso.id).build()}">Remover</a></td>
 						</tr>
 					</tbody>
 				</c:forEach>

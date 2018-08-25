@@ -48,15 +48,15 @@
 			<div class="col-sm-3 my-1">
 				<label class="sr-only" for="inlineFormInputName">Valor da
 					Arroba:</label> <input name="arrobaValue"
-					class="form-control form-control-sm" placeholder="Valor da Arroba R$/@" />
+					class="form-control form-control-sm"
+					placeholder="Valor da Arroba R$/@" />
 			</div>
 
 			<div class="col-auto my-1">
 				<button type="submit" class="btn btn-secondary btn-sm">Filtrar</button>
 			</div>
 		</form>
-
-
+		<p>${removido}</p>
 		<table class="table table-hover">
 			<thead>
 				<tr>
@@ -77,7 +77,7 @@
 							href="${s:mvcUrl('CC#update').arg(0,animal.id).build()}">${animal.id}</a></th>
 						<td>${animal.nick}</td>
 						<td>${animal.sex}</td>
-						<td>${animal.age}</td>
+						<td>${animal.age.getYears()} Anos e ${animal.age.getMonths()} Meses</td>
 						<td>${animal.type}
 						<td>${animal.weight}</td>
 						<td>${animal.weightArrobaFree}</td>
