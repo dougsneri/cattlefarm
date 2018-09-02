@@ -4,12 +4,14 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
-import br.com.igorrodrigues.cattlefarm.models.WeightAndDate;
+import br.com.igorrodrigues.cattlefarm.models.flock.Bovine;
+import br.com.igorrodrigues.cattlefarm.models.flock.WeightAndDate;
 
 @Transactional
 @Repository
@@ -38,6 +40,24 @@ public class WeightAndDateDao {
 	public void remove(Integer id) {
 		WeightAndDate weightAndDate = find(id);
 		manager.remove(weightAndDate);
+	}
+	
+	/**
+	 * Remove all WeightAndDate from a bovine
+	 * @param Bovine id
+	 */
+	public void removeAllFromBovine(Bovine bovine) {
+		String jpql = "delete from WeightAndDate w where w.bovine.id = :pBovineId";
+		Query query = manager.createQuery(jpql);
+		query.setParameter("pBovineId", bovine.getId());
+		query.executeUpdate();
+	}
+	
+	public List<WeightAndDate> selectAllFromBovine(Integer id) {
+		String jpql = "select w from WeightAndDate w where w.bovine.id = :pBovineId";
+		TypedQuery<WeightAndDate> query = manager.createQuery(jpql, WeightAndDate.class);
+		query.setParameter("pBovineId", id);
+		return query.getResultList();
 	}
 	
 	public List<WeightAndDate> listAll() {

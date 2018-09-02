@@ -1,10 +1,9 @@
-package br.com.igorrodrigues.cattlefarm.models;
+package br.com.igorrodrigues.cattlefarm.models.flock;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,7 +13,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -33,7 +31,7 @@ import br.com.igorrodrigues.cattlefarm.config.PeriodAdapter;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@XmlTransient
+//@XmlTransient
 @XmlAccessorType(XmlAccessType.FIELD)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Animal implements Serializable {
@@ -76,7 +74,11 @@ public abstract class Animal implements Serializable {
 	}
 
 	public void setValue(BigDecimal value) {
-		this.value = value;
+		if (value.compareTo(new BigDecimal(0)) >= 0)
+			this.value = value;
+		else
+			throw new IllegalArgumentException("Valor deve ser maior que Zero!");
+
 	}
 
 	public BigDecimal getValue() {
@@ -100,7 +102,11 @@ public abstract class Animal implements Serializable {
 	}
 
 	public void setWeight(double weight) {
-		this.weight = weight;
+		if (weight > 0) {
+			this.weight = weight;
+		} else {
+			throw new IllegalArgumentException("Peso deve ser maior que Zero!");
+		}
 	}
 
 	public double getWeight() {
@@ -121,17 +127,6 @@ public abstract class Animal implements Serializable {
 
 	public StatusAnimal getStatus() {
 		return status;
-	}
-
-	/**
-	 * Set age for a list of animals
-	 * 
-	 * @param animals
-	 */
-	public static void setAgeOfList(List<? extends Animal> animals) {
-		for (Animal animal : animals) {
-			animal.setAge();
-		}
 	}
 
 	@Override

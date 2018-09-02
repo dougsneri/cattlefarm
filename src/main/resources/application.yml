@@ -1,0 +1,27 @@
+server:
+  servlet:
+    context-path: /cattlefarm
+    
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    name: cattlefarm
+    password: ''
+    url: jdbc:mysql://localhost:3306/cattlefarm
+    username: root
+    
+  jackson:
+    deserialization:
+      UNWRAP_ROOT_VALUE: true
+    serialization:
+      WRAP_ROOT_VALUE: true
+      
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp

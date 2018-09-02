@@ -57,6 +57,7 @@
 
 			</c:forEach>
 			<form:errors path="sex" cssClass="text-danger" />
+			<br>
 
 			<label for="type">Tipo:</label>
 			<c:forEach items="${type}" var="tipo">
@@ -69,8 +70,9 @@
 
 			</c:forEach>
 			<form:errors path="type" cssClass="text-danger" />
+			<br>
 			<c:choose>
-				<c:when test="${bovine.type == 'VACA'}">
+				<c:when test="${bovine.sex == 'FEMALE'}">
 					<label for="countChild">Número de Crias:</label>
 					<form:input path="CountChild" cssClass="form-control"
 						placeholder="crias" id="CountChild" />

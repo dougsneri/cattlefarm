@@ -1,4 +1,4 @@
-package br.com.igorrodrigues.cattlefarm.models;
+package br.com.igorrodrigues.cattlefarm.models.flock;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

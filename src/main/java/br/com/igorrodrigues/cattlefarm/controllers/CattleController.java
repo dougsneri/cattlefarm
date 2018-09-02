@@ -2,6 +2,7 @@ package br.com.igorrodrigues.cattlefarm.controllers;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -23,11 +24,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import br.com.igorrodrigues.cattlefarm.DAOs.AnimalDao;
 import br.com.igorrodrigues.cattlefarm.DAOs.WeightAndDateDao;
 import br.com.igorrodrigues.cattlefarm.Validation.BovineValidation;
-import br.com.igorrodrigues.cattlefarm.models.Animal;
-import br.com.igorrodrigues.cattlefarm.models.Bovine;
-import br.com.igorrodrigues.cattlefarm.models.BovineType;
-import br.com.igorrodrigues.cattlefarm.models.WeightAndDate;
-import br.com.igorrodrigues.cattlefarm.models.Sex;
+import br.com.igorrodrigues.cattlefarm.models.flock.Bovine;
+import br.com.igorrodrigues.cattlefarm.models.flock.BovineType;
+import br.com.igorrodrigues.cattlefarm.models.flock.Sex;
+import br.com.igorrodrigues.cattlefarm.models.flock.WeightAndDate;
 
 @Controller
 @RequestMapping("/flock")
@@ -70,8 +70,16 @@ public class CattleController {
 	public ModelAndView listBovines() {
 		ModelAndView modelAndView = new ModelAndView("flock/listaAnimais");
 		List<Bovine> bovines = bovineDao.listAllBovines();
-		BigDecimal totalWeight = Bovine.setWeightListTotal(bovines);
-		Animal.setAgeOfList(bovines);
+		BigDecimal totalWeight = Bovine.getWeightListTotal(bovines);
+
+		bovines.forEach(a -> {
+			a.setAge();
+			a.setType();
+			bovineDao.saveBovine(a);
+		});
+
+		bovines.sort(Comparator.comparing(Bovine::getId));
+
 		modelAndView.addObject("pesoTotal", totalWeight);
 		modelAndView.addObject("animais", bovines);
 		modelAndView.addObject("type", BovineType.values());
@@ -89,18 +97,22 @@ public class CattleController {
 
 		ModelAndView modelAndView = new ModelAndView("flock/listaAnimais");
 		List<Bovine> filteredBovines = bovineDao.listarBovinos(id, sex, type, nick);
-		Animal.setAgeOfList(filteredBovines);
-		BigDecimal totalWeight = Bovine.setWeightListTotal(filteredBovines);
+
+		filteredBovines.forEach(a -> {
+			a.setAge();
+			a.setType();
+		});
+
+		BigDecimal totalWeight = Bovine.getWeightListTotal(filteredBovines);
 		BigDecimal valueListTotal = new BigDecimal(0);
-		
+
 		if (value != null) {
-			for (Bovine bovine : filteredBovines) {
-				bovine.setValue(value);
-			}
-			valueListTotal = Bovine.setValueListTotal(filteredBovines);
+			filteredBovines.forEach(b -> b.setValue(value));
+			valueListTotal = Bovine.getValueListTotal(filteredBovines);
 		}
-		
-		Animal.setAgeOfList(filteredBovines);
+
+		filteredBovines.sort(Comparator.comparing(Bovine::getId));
+
 		modelAndView.addObject("animais", filteredBovines);
 		modelAndView.addObject("pesoTotal", totalWeight);
 		modelAndView.addObject("valueTotal", valueListTotal);
@@ -119,11 +131,13 @@ public class CattleController {
 
 	@GetMapping("/BovinoRemovido")
 	public ModelAndView removeBovine(@RequestParam Integer id, RedirectAttributes redirectAttribute) {
+		Bovine bovine = bovineDao.find(id);
+		weightAndDateDao.removeAllFromBovine(bovine);
 		bovineDao.remove(id);
 		redirectAttribute.addFlashAttribute("removido", "Animal Removido com sucesso");
 		return new ModelAndView("redirect:/flock/listaBovinos");
 	}
-	
+
 	@GetMapping("/PesoEDataRemovido")
 	public ModelAndView removeWeightAndDate(@RequestParam Integer id, RedirectAttributes redirectAttribute) {
 		WeightAndDate weightAndDate = weightAndDateDao.find(id);
@@ -132,5 +146,5 @@ public class CattleController {
 		redirectAttribute.addFlashAttribute("removido", "Data removida com sucesso");
 		return new ModelAndView("redirect:/flock/" + bovineId + "/form");
 	}
-	
+
 }

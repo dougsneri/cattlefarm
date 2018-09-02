@@ -1,7 +1,9 @@
-package br.com.igorrodrigues.cattlefarm.models;
+package br.com.igorrodrigues.cattlefarm.models.flock;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -77,6 +79,27 @@ public class Bovine extends Animal {
 		this.type = type;
 	}
 
+	/**
+	 * set Type according to age
+	 */
+	public void setType() {
+		long months = ChronoUnit.MONTHS.between(birth, LocalDate.now());
+
+		if (this.type == BovineType.TOURO) {
+			return;
+		}
+
+		if (months <= 18) {
+			this.type = BovineType.BEZERRO;
+		} else if (months < 30 && this.countChild == 0) {
+			this.type = BovineType.NOVILHO;
+		} else if (months >= 30 && (this.countChild > 0 || this.sex == Sex.FEMALE)) {
+			this.type = BovineType.VACA;
+		} else {
+			this.type = BovineType.BOI;
+		}
+	}
+
 	public BovineType getType() {
 		return type;
 	}
@@ -87,8 +110,34 @@ public class Bovine extends Animal {
 
 	@Override
 	public void setValue(BigDecimal valuePerArroba) {
-		this.setWeightArrobaFree();
-		this.value = getWeightArrobaFree().multiply(valuePerArroba);
+		if (valuePerArroba.compareTo(BigDecimal.ZERO) >= 0) {
+			this.setWeightArrobaFree();
+			this.value = getWeightArrobaFree().multiply(valuePerArroba);
+		} else
+			throw new IllegalArgumentException("Valor da arroba menor que Zero!");
+	}
+
+	public List<WeightAndDate> getPesoEDataList() {
+		return pesoEDataList;
+	}
+
+	public void setCountChild(int countChild) {
+		this.countChild = countChild;
+	}
+
+	public int getCountChild() {
+		return countChild;
+	}
+
+	/**
+	 * return total value from a list of bovines
+	 * 
+	 * @param animals
+	 * @return
+	 */
+	public static BigDecimal getValueListTotal(List<Bovine> animals) {
+		double valueTotal = animals.stream().mapToDouble(b -> b.getValue().doubleValue()).sum();
+		return new BigDecimal(valueTotal).setScale(2, RoundingMode.HALF_EVEN);
 	}
 
 	/**
@@ -97,38 +146,8 @@ public class Bovine extends Animal {
 	 * @param animals
 	 * @return
 	 */
-	public static BigDecimal setWeightListTotal(List<Bovine> animals) {
-		BigDecimal pesoTotal = new BigDecimal(0);
-		for (Bovine bovine : animals) {
-			pesoTotal = pesoTotal.add(bovine.getWeightArrobaFree()).setScale(2, RoundingMode.HALF_EVEN);
-		}
-		return pesoTotal;
-	}
-
-	/**
-	 * return total value from a list of bovines
-	 * 
-	 * @param animais
-	 * @return
-	 */
-
-	public static BigDecimal setValueListTotal(List<Bovine> animais) {
-		BigDecimal valueTotal = new BigDecimal(0);
-		for (Bovine bovine : animais) {
-			valueTotal = valueTotal.add(bovine.getValue()).setScale(2, RoundingMode.HALF_EVEN);
-		}
-		return valueTotal;
-	}
-
-	public List<WeightAndDate> getPesoEDataList() {
-		return pesoEDataList;
-	}
-
-	public void setCountChild(int countChild) {
-			this.countChild = countChild;
-	}
-	
-	public int getCountChild() {
-		return countChild;
+	public static BigDecimal getWeightListTotal(List<Bovine> animals) {
+		double pesoTotalDouble = animals.stream().mapToDouble(b -> b.getWeightArrobaFree().doubleValue()).sum();
+		return new BigDecimal(pesoTotalDouble).setScale(2, RoundingMode.HALF_EVEN);
 	}
 }

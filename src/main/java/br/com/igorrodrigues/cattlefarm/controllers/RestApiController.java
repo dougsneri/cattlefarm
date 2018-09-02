@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.igorrodrigues.cattlefarm.DAOs.AnimalDao;
 import br.com.igorrodrigues.cattlefarm.DAOs.WeightAndDateDao;
-import br.com.igorrodrigues.cattlefarm.models.Bovine;
-import br.com.igorrodrigues.cattlefarm.models.BovineType;
-import br.com.igorrodrigues.cattlefarm.models.WeightAndDate;
-import br.com.igorrodrigues.cattlefarm.models.Sex;
+import br.com.igorrodrigues.cattlefarm.models.flock.Bovine;
+import br.com.igorrodrigues.cattlefarm.models.flock.BovineType;
+import br.com.igorrodrigues.cattlefarm.models.flock.Sex;
+import br.com.igorrodrigues.cattlefarm.models.flock.WeightAndDate;
 
 @RestController
 @RequestMapping("/api")
@@ -41,9 +41,7 @@ public class RestApiController {
 	public List<Bovine> listAllBovinesXml() {
 		List<Bovine> listBovines = animalDao.listAllBovines();
 
-		for (Bovine bovine : listBovines) {
-			bovine.setAge();
-		}
+		listBovines.forEach(b -> b.setAge());
 		return listBovines;
 	}
 
@@ -66,11 +64,10 @@ public class RestApiController {
 			@RequestParam(value = "arrobaValue", required = false) BigDecimal arrobavalue) {
 
 		List<Bovine> filteredBovines = animalDao.listarBovinos(id, sex, type, nick);
-		Bovine.setAgeOfList(filteredBovines);
+		filteredBovines.forEach(b -> b.setAge());
+		
 		if (arrobavalue != null) {
-			for (Bovine bovine : filteredBovines) {
-				bovine.setValue(arrobavalue);
-			}
+			filteredBovines.forEach(b -> b.setValue(arrobavalue));
 			return filteredBovines;
 		}
 		return filteredBovines;

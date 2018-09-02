@@ -1,5 +1,6 @@
 package br.com.igorrodrigues.cattlefarm.DAOs;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -14,10 +15,10 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
-import br.com.igorrodrigues.cattlefarm.models.Bovine;
-import br.com.igorrodrigues.cattlefarm.models.BovineType;
-import br.com.igorrodrigues.cattlefarm.models.Sex;
-import br.com.igorrodrigues.cattlefarm.models.StatusAnimal;
+import br.com.igorrodrigues.cattlefarm.models.flock.Bovine;
+import br.com.igorrodrigues.cattlefarm.models.flock.BovineType;
+import br.com.igorrodrigues.cattlefarm.models.flock.Sex;
+import br.com.igorrodrigues.cattlefarm.models.flock.StatusAnimal;
 
 @Repository
 @Transactional
@@ -37,7 +38,7 @@ public class AnimalDao {
 		else
 			manager.merge(bovine);
 	}
-	
+
 	/**
 	 * List all Bovines in DB
 	 *
@@ -50,9 +51,10 @@ public class AnimalDao {
 		query.setParameter("pBovineStatus", StatusAnimal.ACTIVE);
 		return query.getResultList();
 	}
-	
+
 	/**
 	 * List filtered Bovines
+	 * 
 	 * @param id
 	 * @param sex
 	 * @param type
@@ -97,6 +99,15 @@ public class AnimalDao {
 		return typedQuery.getResultList();
 	}
 
+	public List<Bovine> listaComNascimentoEntre(LocalDate inicio, LocalDate fim) {
+		String jpql = "select b from Bovine b where b.birth between :pInicio and :pFim and b.status = :pBovineStatus";
+		TypedQuery<Bovine> query = manager.createQuery(jpql, Bovine.class);
+		query.setParameter("pInicio", inicio);
+		query.setParameter("pFim", fim);
+		query.setParameter("pBovineStatus", StatusAnimal.ACTIVE);
+		return query.getResultList();
+	}
+
 	public Bovine find(Integer id) {
 		Bovine bovine = manager.find(Bovine.class, id);
 		return bovine;
@@ -104,7 +115,9 @@ public class AnimalDao {
 
 	public void remove(Integer id) {
 		Bovine bovine = find(id);
-		manager.remove(bovine);
+		if(bovine != null) {
+			manager.remove(bovine);
+		}
 	}
 
 }
