@@ -8,6 +8,7 @@ import static org.junit.Assert.assertNull;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
@@ -123,6 +124,12 @@ public class AnimalDaoTest {
 				LocalDate.now());
 		assertEquals(1, listaComNascimentoEntre2.size());
 
+	}
+	
+	@Test
+	public void testeBuscandoListChaveValor() {
+		List<?> teste = animalDao.teste();
+		teste.forEach(s -> System.out.println(s.toString()));
 	}
 
 }

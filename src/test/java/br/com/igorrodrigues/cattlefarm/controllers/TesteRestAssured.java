@@ -11,13 +11,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -27,7 +24,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 
-import br.com.igorrodrigues.cattlefarm.DAOs.AnimalDao;
 import br.com.igorrodrigues.cattlefarm.models.flock.Bovine;
 import br.com.igorrodrigues.cattlefarm.models.flock.BovineType;
 import br.com.igorrodrigues.cattlefarm.models.flock.Sex;
@@ -159,5 +155,7 @@ public class TesteRestAssured {
 		expect().statusCode(200).when().delete("/cattlefarm/api/listaBovinos/" + id);
 
 	}
+	
+	
 	
 }

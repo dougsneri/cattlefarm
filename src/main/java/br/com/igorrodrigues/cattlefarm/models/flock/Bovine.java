@@ -16,6 +16,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -32,6 +34,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 @DynamicUpdate
 @JacksonXmlRootElement(namespace = "bovine")
 @JsonRootName(value = "bovine")
+@JsonInclude(Include.NON_NULL)
 @JsonPropertyOrder({ "id", "nick", "value", "birth", "age", "weight", "sex", "status", "type", "weightArrobaFree",
 		"pesoEDataList", "weightArroba", "countChild" })
 @XmlAccessorType(XmlAccessType.FIELD)

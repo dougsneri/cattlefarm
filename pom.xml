@@ -120,6 +120,7 @@
 			<artifactId>javax.servlet-api</artifactId>
 		</dependency>
 
+		<!-- BootStrap -->
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>bootstrap</artifactId>
@@ -137,6 +138,7 @@
 			<artifactId>jquery</artifactId>
 			<version>3.3.1-1</version>
 		</dependency>
+		<!-- Fim BootStrap -->
 
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -158,16 +160,16 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-xml</artifactId>
-			<version>2.9.6</version><!--$NO-MVN-MAN-VER$-->
+			<version>2.9.6</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 
 		<dependency>
 			<groupId>io.rest-assured</groupId>
 			<artifactId>rest-assured</artifactId>
-			<version>3.1.0</version><!--$NO-MVN-MAN-VER$-->
+			<version>3.1.0</version><!--$NO-MVN-MAN-VER$ -->
 			<scope>test</scope>
 		</dependency>
-		
+
 	</dependencies>
 
 	<build>

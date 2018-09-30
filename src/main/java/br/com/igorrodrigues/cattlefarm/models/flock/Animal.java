@@ -18,6 +18,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import br.com.igorrodrigues.cattlefarm.config.LocalDateAdapter;
 import br.com.igorrodrigues.cattlefarm.config.PeriodAdapter;
@@ -34,6 +36,7 @@ import br.com.igorrodrigues.cattlefarm.config.PeriodAdapter;
 //@XmlTransient
 @XmlAccessorType(XmlAccessType.FIELD)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
 public abstract class Animal implements Serializable {
 
 	private static final long serialVersionUID = 1L;

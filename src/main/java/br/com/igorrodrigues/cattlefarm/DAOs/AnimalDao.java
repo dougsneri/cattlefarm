@@ -2,9 +2,11 @@ package br.com.igorrodrigues.cattlefarm.DAOs;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -118,6 +120,13 @@ public class AnimalDao {
 		if(bovine != null) {
 			manager.remove(bovine);
 		}
+	}
+	
+	public List<?> teste() {
+		String sql = "select b.id, w.id from Bovine b, WeightAndDate w";
+		Query query = manager.createQuery(sql);
+		List<?> resultList = query.getResultList();
+		return resultList;
 	}
 
 }
